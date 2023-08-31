@@ -668,6 +668,7 @@ func (app *BaseApp) createQueryContext(height int64, prove bool) (sdk.Context, e
 		if ok {
 			cInfo, err := rms.GetCommitInfoFromDb(height)
 			fmt.Println("createQueryContext.cInfo: ", cInfo)
+			fmt.Println("createQueryContext.cInfo: ", cInfo.Timestamp)
 			if cInfo != nil && err == nil {
 				ctx = ctx.WithBlockTime(cInfo.Timestamp)
 			}
