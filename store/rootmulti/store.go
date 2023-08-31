@@ -614,6 +614,10 @@ func (rs *Store) SetInitialVersion(version int64) error {
 	return nil
 }
 
+func (rs *Store) GetCommitInfo(ver int64) (*types.CommitInfo, error) {
+	return getCommitInfo(rs.db, ver)
+}
+
 // parsePath expects a format like /<storeName>[/<subpath>]
 // Must start with /, subpath may be empty
 // Returns error if it doesn't start with /

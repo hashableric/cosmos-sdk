@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/cosmos/cosmos-sdk/store/rootmulti"
 	"github.com/gogo/protobuf/proto"
 	abci "github.com/tendermint/tendermint/abci/types"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
@@ -648,6 +649,16 @@ func (app *BaseApp) createQueryContext(height int64, prove bool) (sdk.Context, e
 	ctx := sdk.NewContext(
 		cacheMS, app.checkState.ctx.BlockHeader(), true, app.logger,
 	).WithMinGasPrices(app.minGasPrices).WithBlockHeight(height)
+
+	if height != app.LastBlockHeight() {
+		rms, ok := app.cms.(*rootmulti.Store)
+		if ok {
+			cInfo, err := rms.GetCommitInfo(height)
+			if cInfo != nil && err == nil {
+				ctx = ctx.WithBlockTime(time.Now())
+			}
+		}
+	}
 
 	return ctx, nil
 }
